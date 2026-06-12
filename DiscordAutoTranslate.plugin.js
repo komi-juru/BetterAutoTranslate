@@ -63,6 +63,120 @@ module.exports = (() => {
         offPath: `<path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"></path>`
     };
 
+    // === I18N ===
+    const getLocale = () => {
+        try {
+            const LocaleStore = BdApi.Webpack.getStore("LocaleStore");
+            if (LocaleStore && LocaleStore.locale) return LocaleStore.locale;
+        } catch (e) {}
+        return document.documentElement.lang || "en-US";
+    };
+
+    const I18N = {
+        en: {
+            pluginDesc: "Real-time message translation",
+            dmGroup: "DM/Group",
+            unknownChannel: "Unknown Channel",
+            currentDm: "Current / DM",
+            targetLang: "Target Language",
+            targetLangDesc: "Messages will be translated into this language.",
+            translation: "Translation",
+            translationDesc: "Configure how translations are processed.",
+            googleFree: "Google Translate (Free)",
+            deeplKey: "DeepL API (Requires Key)",
+            deeplPlaceholder: "DeepL API Key (ends with :fx for Free Tier)",
+            hide: "HIDE",
+            show: "SHOW",
+            translateOutgoing: "Translate Outgoing Messages",
+            translateOutgoingDesc: "Automatically translate your messages in active channels",
+            ignorePrefix: "Ignore Prefix",
+            ignorePrefixDesc: "Messages starting with this will not be translated",
+            slashNotAllowed: "Slash (/) is not allowed to prevent Discord command conflicts.",
+            channels: "Channels",
+            channelsDesc: "Add channels and set the source language for each.",
+            addBtn: "+ Add",
+            noChannels: "No channels added yet",
+            enterChannelId: "Please enter a Channel ID.",
+            channelAlreadyAdded: "Channel already added.",
+            invalidId: "Please select a channel from the list or enter a valid numeric ID.",
+            enterValidId: "Please enter a valid numeric ID.",
+            save: "\u2713 Save",
+            cancel: "Cancel",
+            edit: "Edit",
+            delete: "Delete",
+            added: "Added",
+            updatedTo: "Updated to",
+            appearance: "Appearance",
+            translationColor: "Translation Color",
+            translationColorDesc: "Customize the translated text color",
+            reset: "Reset",
+            showSeparator: "Show Separator Line",
+            showSeparatorDesc: "Display a dashed line above translations",
+            hideOriginal: "Hide Original Message",
+            hideOriginalDesc: "Show only the translated text",
+            cacheCleared: "Translation cache cleared.",
+            clearCache: "Clear Cache",
+            outgoingFailed: "Outgoing translation failed. Sent original text.",
+            translationMenu: "Translation Menu",
+            searchChannel: "\uD83D\uDD0D Search channel name or paste ID...",
+            select: "Select..."
+        },
+        ko: {
+            pluginDesc: "\uC2E4\uC2DC\uAC04 \uBA54\uC2DC\uC9C0 \uBC88\uC5ED",
+            dmGroup: "DM/\uADF8\uB8F9",
+            unknownChannel: "\uC54C \uC218 \uC5C6\uB294 \uCC44\uB110",
+            currentDm: "\uD604\uC7AC / DM",
+            targetLang: "\uBC88\uC5ED \uC5B8\uC5B4",
+            targetLangDesc: "\uBA54\uC2DC\uC9C0\uAC00 \uC774 \uC5B8\uC5B4\uB85C \uBC88\uC5ED\uB429\uB2C8\uB2E4.",
+            translation: "\uBC88\uC5ED \uC124\uC815",
+            translationDesc: "\uBC88\uC5ED \uCC98\uB9AC \uBC29\uC2DD\uC744 \uC124\uC815\uD569\uB2C8\uB2E4.",
+            googleFree: "Google \uBC88\uC5ED (\uBB34\uB8CC)",
+            deeplKey: "DeepL API (\uD0A4 \uD544\uC694)",
+            deeplPlaceholder: "DeepL API \uD0A4 (\uBB34\uB8CC \uD50C\uB79C\uC740 :fx\uB85C \uB05D\uB0A8)",
+            hide: "\uC228\uAE30\uAE30",
+            show: "\uBCF4\uAE30",
+            translateOutgoing: "\uBCF4\uB0B4\uB294 \uBA54\uC2DC\uC9C0 \uBC88\uC5ED",
+            translateOutgoingDesc: "\uD65C\uC131\uD654\uB41C \uCC44\uB110\uC5D0\uC11C \uB0B4 \uBA54\uC2DC\uC9C0\uB97C \uC790\uB3D9\uC73C\uB85C \uBC88\uC5ED\uD569\uB2C8\uB2E4",
+            ignorePrefix: "\uBB34\uC2DC \uC811\uB450\uC0AC",
+            ignorePrefixDesc: "\uC774 \uBB38\uC790\uB85C \uC2DC\uC791\uD558\uB294 \uBA54\uC2DC\uC9C0\uB294 \uBC88\uC5ED\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4",
+            slashNotAllowed: "\uC2AC\uB798\uC2DC(/)\uB294 \uB514\uC2A4\uCF54\uB4DC \uBA85\uB839\uC5B4\uC640 \uCDA9\uB3CC\uD558\uBBC0\uB85C \uC0AC\uC6A9\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.",
+            channels: "\uCC44\uB110",
+            channelsDesc: "\uCC44\uB110\uC744 \uCD94\uAC00\uD558\uACE0 \uAC01 \uCC44\uB110\uC758 \uC18C\uC2A4 \uC5B8\uC5B4\uB97C \uC124\uC815\uD569\uB2C8\uB2E4.",
+            addBtn: "+ \uCD94\uAC00",
+            noChannels: "\uCD94\uAC00\uB41C \uCC44\uB110\uC774 \uC5C6\uC2B5\uB2C8\uB2E4",
+            enterChannelId: "\uCC44\uB110 ID\uB97C \uC785\uB825\uD574\uC8FC\uC138\uC694.",
+            channelAlreadyAdded: "\uC774\uBBF8 \uCD94\uAC00\uB41C \uCC44\uB110\uC785\uB2C8\uB2E4.",
+            invalidId: "\uBAA9\uB85D\uC5D0\uC11C \uCC44\uB110\uC744 \uC120\uD0DD\uD558\uAC70\uB098 \uC720\uD6A8\uD55C \uC22B\uC790 ID\uB97C \uC785\uB825\uD574\uC8FC\uC138\uC694.",
+            enterValidId: "\uC720\uD6A8\uD55C \uC22B\uC790 ID\uB97C \uC785\uB825\uD574\uC8FC\uC138\uC694.",
+            save: "\u2713 \uC800\uC7A5",
+            cancel: "\uCDE8\uC18C",
+            edit: "\uD3B8\uC9D1",
+            delete: "\uC0AD\uC81C",
+            added: "\uCD94\uAC00\uB428",
+            updatedTo: "\uBCC0\uACBD\uB428:",
+            appearance: "\uC678\uAD00",
+            translationColor: "\uBC88\uC5ED \uD14D\uC2A4\uD2B8 \uC0C9\uC0C1",
+            translationColorDesc: "\uBC88\uC5ED\uB41C \uD14D\uC2A4\uD2B8\uC758 \uC0C9\uC0C1\uC744 \uBCC0\uACBD\uD569\uB2C8\uB2E4",
+            reset: "\uCD08\uAE30\uD654",
+            showSeparator: "\uAD6C\uBD84\uC120 \uD45C\uC2DC",
+            showSeparatorDesc: "\uBC88\uC5ED \uC704\uC5D0 \uC810\uC120\uC744 \uD45C\uC2DC\uD569\uB2C8\uB2E4",
+            hideOriginal: "\uC6D0\uBCF8 \uBA54\uC2DC\uC9C0 \uC228\uAE30\uAE30",
+            hideOriginalDesc: "\uBC88\uC5ED\uB41C \uD14D\uC2A4\uD2B8\uB9CC \uD45C\uC2DC\uD569\uB2C8\uB2E4",
+            cacheCleared: "\uBC88\uC5ED \uCE90\uC2DC\uAC00 \uC0AD\uC81C\uB418\uC5C8\uC2B5\uB2C8\uB2E4.",
+            clearCache: "\uCE90\uC2DC \uC0AD\uC81C",
+            outgoingFailed: "\uBC1C\uC2E0 \uBC88\uC5ED\uC5D0 \uC2E4\uD328\uD588\uC2B5\uB2C8\uB2E4. \uC6D0\uBCF8 \uD14D\uC2A4\uD2B8\uB85C \uC804\uC1A1\uD569\uB2C8\uB2E4.",
+            translationMenu: "\uBC88\uC5ED \uBA54\uB274",
+            searchChannel: "\uD83D\uDD0D \uCC44\uB110 \uC774\uB984 \uAC80\uC0C9 \uB610\uB294 ID \uC785\uB825...",
+            select: "\uC120\uD0DD..."
+        }
+    };
+
+    const t = (key) => {
+        const locale = getLocale();
+        const lang = locale.startsWith("ko") ? "ko" : "en";
+        return (I18N[lang] && I18N[lang][key]) || I18N.en[key] || key;
+    };
+
     // === UTILITIES ===
     const Utils = {
         _channelStore: undefined,
@@ -117,10 +231,10 @@ module.exports = (() => {
                 const channel = Utils._channelStore.getChannel(id);
                 if (channel) {
                     if (channel.name) return `#${channel.name}`;
-                    if (channel.type === 1 || channel.type === 3) return "DM/Group";
+                    if (channel.type === 1 || channel.type === 3) return t('dmGroup');
                 }
             }
-            return "Unknown Channel";
+            return t('unknownChannel');
         },
         searchChannels: (query) => {
             if (!query) return [];
@@ -158,8 +272,8 @@ module.exports = (() => {
                     if (currentChannel && currentChannel.name && currentChannel.name.toLowerCase().includes(query) && !results.find(c => c.id === currentId)) {
                         results.push({
                             id: currentChannel.id,
-                            name: currentChannel.type === 1 || currentChannel.type === 3 ? "DM/Group" : `#${currentChannel.name}`,
-                            guildName: "Current / DM"
+                            name: currentChannel.type === 1 || currentChannel.type === 3 ? t('dmGroup') : `#${currentChannel.name}`,
+                            guildName: t('currentDm')
                         });
                     }
                 }
@@ -625,7 +739,7 @@ module.exports = (() => {
                 return ce("div", { ref: wrapperRef, style: { position: "relative", flex: 1 } },
                     ce("input", {
                         type: "text",
-                        placeholder: "\uD83D\uDD0D Search channel name or paste ID...",
+                        placeholder: t('searchChannel'),
                         value: query,
                         onChange: handleSearch,
                         onKeyDown: (e) => { if (e.key === "Enter") { setIsOpen(false); onEnter(); } },
@@ -694,7 +808,7 @@ module.exports = (() => {
                         onMouseOver: (e) => { e.currentTarget.style.borderColor = "rgba(88,101,242,0.5)"; e.currentTarget.style.background = "var(--background-modifier-selected)"; },
                         onMouseOut: (e) => { e.currentTarget.style.borderColor = "var(--border-subtle)"; e.currentTarget.style.background = "var(--input-background)"; }
                     },
-                        ce("span", null, selectedOption ? selectedOption.label : "Select..."),
+                        ce("span", null, selectedOption ? selectedOption.label : t('select')),
                         ce("span", { style: { fontSize: "10px", opacity: 0.6, transform: isOpen ? "rotate(180deg)" : "none", transition: "transform 0.2s" } }, "▼")
                     ),
                     isOpen && ce("div", {
@@ -779,15 +893,15 @@ module.exports = (() => {
 
                 const handleAddChannel = () => {
                     const id = inputValue.trim();
-                    if (!id) return this.showToast("Please enter a Channel ID.", "error");
-                    if (channels.some(c => c.id === id)) return this.showToast("Channel already added.", "error");
-                    if (!/^\d+$/.test(id)) return this.showToast("Please select a channel from the list or enter a valid numeric ID.", "error");
+                    if (!id) return this.showToast(t('enterChannelId'), "error");
+                    if (channels.some(c => c.id === id)) return this.showToast(t('channelAlreadyAdded'), "error");
+                    if (!/^\d+$/.test(id)) return this.showToast(t('invalidId'), "error");
                     const newChannels = [].concat(channels, [{ id: id, lang: inputLang }]);
                     setChannels(newChannels); 
                     updateStateAndSave({ channels: newChannels }, true); 
                     setInputValue("");
                     const channelName = Utils.getChannelName(id);
-                    this.showToast("Added " + channelName + " (" + id + ")", "success");
+                    this.showToast(t('added') + " " + channelName + " (" + id + ")", "success");
                 };
 
                 const selectStyle = {
@@ -825,12 +939,12 @@ module.exports = (() => {
                             } }, "\uD83C\uDF10"),
                             ce("div", null,
                                 ce("h2", { style: { color: "var(--header-primary)", margin: "0 0 2px 0", fontSize: "18px", fontWeight: "700", letterSpacing: "-0.01em" } }, "BetterAutoTranslate"),
-                                ce("span", { style: { color: "var(--text-muted)", fontSize: "12px", fontWeight: "500" } }, "v1.0.0 \u2022 Real-time message translation")
+                                ce("span", { style: { color: "var(--text-muted)", fontSize: "12px", fontWeight: "500" } }, "v1.0.0 \u2022 " + t('pluginDesc'))
                             )
                         )
                     ),
 
-                    ce(SectionHeader, { icon: "\uD83C\uDFAF", title: "Target Language", subtitle: "Messages will be translated into this language." }),
+                    ce(SectionHeader, { icon: "\uD83C\uDFAF", title: t('targetLang'), subtitle: t('targetLangDesc') }),
                     ce(CustomSelectDropdown, {
                         value: targetLang,
                         onChange: (val) => { setTargetLang(val); updateStateAndSave({ targetLang: val }, true); },
@@ -840,20 +954,20 @@ module.exports = (() => {
                     
                     ce(SectionDivider),
                     
-                    ce(SectionHeader, { icon: "⚙️", title: "Translation", subtitle: "Configure how translations are processed." }),
+                    ce(SectionHeader, { icon: "⚙️", title: t('translation'), subtitle: t('translationDesc') }),
                     ce("div", { style: { display: "flex", gap: "10px", marginBottom: "16px", flexDirection: "column" } },
                         ce(CustomSelectDropdown, {
                             value: translationEngine,
                             onChange: (val) => { setTranslationEngine(val); updateStateAndSave({ translationEngine: val }, true); },
                             options: [
-                                { value: "google", label: "Google Translate (Free)" },
-                                { value: "deepl", label: "DeepL API (Requires Key)" }
+                                { value: "google", label: t('googleFree') },
+                                { value: "deepl", label: t('deeplKey') }
                             ]
                         }),
                         translationEngine === "deepl" && ce("div", { style: { position: "relative", display: "flex", alignItems: "center" } },
                             ce("input", {
                                 type: showApiKey ? "text" : "password",
-                                placeholder: "DeepL API Key (ends with :fx for Free Tier)",
+                                placeholder: t('deeplPlaceholder'),
                                 value: deeplApiKey,
                                 onChange: (e) => { setDeeplApiKey(e.target.value); updateStateAndSave({ deeplApiKey: e.target.value }, true); },
                                 style: {
@@ -874,7 +988,7 @@ module.exports = (() => {
                                 },
                                 onMouseOver: (e) => e.currentTarget.style.color = "var(--text-normal)",
                                 onMouseOut: (e) => e.currentTarget.style.color = "var(--text-muted)"
-                            }, showApiKey ? "HIDE" : "SHOW")
+                            }, showApiKey ? t('hide') : t('show'))
                         ),
                         ce("div", {
                             style: {
@@ -888,8 +1002,8 @@ module.exports = (() => {
                             onMouseOut: (e) => e.currentTarget.style.background = "var(--background-modifier-hover)"
                         },
                             ce("div", null,
-                                ce("div", { style: { color: "var(--text-normal)", fontSize: "14px", fontWeight: "500" } }, "Translate Outgoing Messages"),
-                                ce("div", { style: { color: "var(--text-muted)", fontSize: "12px", marginTop: "2px" } }, "Automatically translate your messages in active channels")
+                                ce("div", { style: { color: "var(--text-normal)", fontSize: "14px", fontWeight: "500" } }, t('translateOutgoing')),
+                                ce("div", { style: { color: "var(--text-muted)", fontSize: "12px", marginTop: "2px" } }, t('translateOutgoingDesc'))
                             ),
                             ce(ToggleSwitch, { checked: translateOutgoing, onChange: function(val) { setTranslateOutgoing(val); updateStateAndSave({ translateOutgoing: val }, false, true); } })
                         ),
@@ -901,15 +1015,15 @@ module.exports = (() => {
                             }
                         },
                             ce("div", null,
-                                ce("div", { style: { color: "var(--text-normal)", fontSize: "14px", fontWeight: "500" } }, "Ignore Prefix"),
-                                ce("div", { style: { color: "var(--text-muted)", fontSize: "12px", marginTop: "2px" } }, "Messages starting with this will not be translated")
+                                ce("div", { style: { color: "var(--text-normal)", fontSize: "14px", fontWeight: "500" } }, t('ignorePrefix')),
+                                ce("div", { style: { color: "var(--text-muted)", fontSize: "12px", marginTop: "2px" } }, t('ignorePrefixDesc'))
                             ),
                             ce("input", {
                                 type: "text",
                                 maxLength: 1,
                                 value: ignorePrefix,
                                 onChange: (e) => { 
-                                    if (e.target.value.includes("/")) return BdApi.UI.showToast("Slash (/) is not allowed to prevent Discord command conflicts.", { type: "error" });
+                                    if (e.target.value.includes("/")) return BdApi.UI.showToast(t('slashNotAllowed'), { type: "error" });
                                     setIgnorePrefix(e.target.value); 
                                     updateStateAndSave({ ignorePrefix: e.target.value }, true); 
                                 },
@@ -927,7 +1041,7 @@ module.exports = (() => {
 
                     ce(SectionDivider),
 
-                    ce(SectionHeader, { icon: "\uD83D\uDCE2", title: "Channels", subtitle: "Add channels and set the source language for each." }),
+                    ce(SectionHeader, { icon: "\uD83D\uDCE2", title: t('channels'), subtitle: t('channelsDesc') }),
 
                     ce("div", { style: { display: "flex", gap: "8px", marginBottom: "16px", zIndex: 10 } },
                         ce(ChannelSearchDropdown, { value: inputValue, onChange: setInputValue, onEnter: handleAddChannel }),
@@ -947,7 +1061,7 @@ module.exports = (() => {
                             },
                             onMouseOver: (e) => { e.currentTarget.style.background = "#4752c4"; e.currentTarget.style.transform = "translateY(-1px)"; },
                             onMouseOut: (e) => { e.currentTarget.style.background = "#5865F2"; e.currentTarget.style.transform = "translateY(0)"; }
-                        }, "+ Add")
+                        }, t('addBtn'))
                     ),
                     
                     ce("div", {
@@ -961,7 +1075,7 @@ module.exports = (() => {
                         channels.length === 0 
                         ? ce("div", { style: { color: "var(--text-muted)", textAlign: "center", padding: "28px 16px", fontSize: "14px" } },
                             ce("div", { style: { fontSize: "28px", marginBottom: "8px", opacity: "0.5" } }, "\uD83D\uDCED"),
-                            "No channels added yet"
+                            t('noChannels')
                           ) 
                         : channels.map((ch) => {
                             if (editingChannel && editingChannel.id === ch.id) {
@@ -992,13 +1106,13 @@ module.exports = (() => {
                                     }),
                                     ce("button", {
                                         onClick: () => {
-                                            if (!/^\d+$/.test(editingChannel.newId)) return this.showToast("Please enter a valid numeric ID.", "error");
-                                            if (editingChannel.newId !== ch.id && channels.some((c) => { return c.id === editingChannel.newId; })) return this.showToast("Channel already added.", "error");
+                                            if (!/^\d+$/.test(editingChannel.newId)) return this.showToast(t('enterValidId'), "error");
+                                            if (editingChannel.newId !== ch.id && channels.some((c) => { return c.id === editingChannel.newId; })) return this.showToast(t('channelAlreadyAdded'), "error");
                                             const newChannels = channels.map((c) => { return c.id === ch.id ? { id: editingChannel.newId, lang: editingChannel.newLang } : c; });
                                             setChannels(newChannels);
                                             updateStateAndSave({ channels: newChannels }, true);
                                             setEditingChannel(null);
-                                            this.showToast("Updated to " + Utils.getChannelName(editingChannel.newId), "success");
+                                            this.showToast(t('updatedTo') + " " + Utils.getChannelName(editingChannel.newId), "success");
                                         },
                                         style: {
                                             padding: "7px 14px", background: "#43b581", color: "var(--header-primary)",
@@ -1007,7 +1121,7 @@ module.exports = (() => {
                                         },
                                         onMouseOver: (e) => e.currentTarget.style.background = "#3ca374",
                                         onMouseOut: (e) => e.currentTarget.style.background = "#43b581"
-                                    }, "\u2713 Save"),
+                                    }, t('save')),
                                     ce("button", {
                                         onClick: () => setEditingChannel(null),
                                         style: {
@@ -1017,7 +1131,7 @@ module.exports = (() => {
                                         },
                                         onMouseOver: (e) => { e.currentTarget.style.background = "var(--background-modifier-hover)"; },
                                         onMouseOut: (e) => { e.currentTarget.style.background = "transparent"; }
-                                    }, "Cancel")
+                                    }, t('cancel'))
                                 );
                             }
 
@@ -1070,7 +1184,7 @@ module.exports = (() => {
                                         },
                                         onMouseOver: (e) => { e.currentTarget.style.background = "var(--background-modifier-selected)"; e.currentTarget.style.color = "var(--header-primary)"; },
                                         onMouseOut: (e) => { e.currentTarget.style.background = "var(--background-modifier-hover)"; e.currentTarget.style.color = "var(--interactive-normal)"; }
-                                    }, "Edit"),
+                                    }, t('edit')),
                                     ce("button", {
                                         onClick: () => {
                                             const newChannels = channels.filter((c) => { return c.id !== ch.id; });
@@ -1085,7 +1199,7 @@ module.exports = (() => {
                                         },
                                         onMouseOver: (e) => { e.currentTarget.style.background = "rgba(237,66,69,0.2)"; e.currentTarget.style.color = "#ff6b6b"; },
                                         onMouseOut: (e) => { e.currentTarget.style.background = "rgba(237,66,69,0.1)"; e.currentTarget.style.color = "#ed4245"; }
-                                    }, "Delete")
+                                    }, t('delete'))
                                 )
                             );
                         })
@@ -1093,7 +1207,7 @@ module.exports = (() => {
 
                     ce(SectionDivider),
 
-                    ce(SectionHeader, { icon: "\uD83C\uDFA8", title: "Appearance" }),
+                    ce(SectionHeader, { icon: "\uD83C\uDFA8", title: t('appearance') }),
 
                     ce("div", { style: { display: "flex", flexDirection: "column", gap: "4px" } },
 
@@ -1105,8 +1219,8 @@ module.exports = (() => {
                             }
                         },
                             ce("div", null,
-                                ce("div", { style: { color: "var(--text-normal)", fontSize: "14px", fontWeight: "500" } }, "Translation Color"),
-                                ce("div", { style: { color: "var(--text-muted)", fontSize: "12px", marginTop: "2px" } }, "Customize the translated text color")
+                                ce("div", { style: { color: "var(--text-normal)", fontSize: "14px", fontWeight: "500" } }, t('translationColor')),
+                                ce("div", { style: { color: "var(--text-muted)", fontSize: "12px", marginTop: "2px" } }, t('translationColorDesc'))
                             ),
                             ce("div", { style: { display: "flex", alignItems: "center", gap: "10px" } },
                                 ce(ChromeStyleColorPicker, {
@@ -1131,7 +1245,7 @@ module.exports = (() => {
                                     },
                                     onMouseOver: (e) => { e.currentTarget.style.color = "var(--header-primary)"; e.currentTarget.style.borderColor = "var(--border-strong)"; },
                                     onMouseOut: (e) => { e.currentTarget.style.color = "var(--text-muted)"; e.currentTarget.style.borderColor = "var(--background-modifier-selected)"; }
-                                }, "Reset")
+                                }, t('reset'))
                             )
                         ),
 
@@ -1147,8 +1261,8 @@ module.exports = (() => {
                             onMouseOut: (e) => e.currentTarget.style.background = "var(--background-modifier-hover)"
                         },
                             ce("div", null,
-                                ce("div", { style: { color: "var(--text-normal)", fontSize: "14px", fontWeight: "500" } }, "Show Separator Line"),
-                                ce("div", { style: { color: "var(--text-muted)", fontSize: "12px", marginTop: "2px" } }, "Display a dashed line above translations")
+                                ce("div", { style: { color: "var(--text-normal)", fontSize: "14px", fontWeight: "500" } }, t('showSeparator')),
+                                ce("div", { style: { color: "var(--text-muted)", fontSize: "12px", marginTop: "2px" } }, t('showSeparatorDesc'))
                             ),
                             ce(ToggleSwitch, { checked: showSeparator, onChange: function(val) { setShowSeparator(val); updateStateAndSave({ showSeparator: val }, false, true); } })
                         ),
@@ -1165,8 +1279,8 @@ module.exports = (() => {
                             onMouseOut: (e) => e.currentTarget.style.background = "var(--background-modifier-hover)"
                         },
                             ce("div", null,
-                                ce("div", { style: { color: "var(--text-normal)", fontSize: "14px", fontWeight: "500" } }, "Hide Original Message"),
-                                ce("div", { style: { color: "var(--text-muted)", fontSize: "12px", marginTop: "2px" } }, "Show only the translated text")
+                                ce("div", { style: { color: "var(--text-normal)", fontSize: "14px", fontWeight: "500" } }, t('hideOriginal')),
+                                ce("div", { style: { color: "var(--text-muted)", fontSize: "12px", marginTop: "2px" } }, t('hideOriginalDesc'))
                             ),
                             ce(ToggleSwitch, { checked: hideOriginal, onChange: function(val) { setHideOriginal(val); updateStateAndSave({ hideOriginal: val }, false, true); } })
                         )
@@ -1179,7 +1293,7 @@ module.exports = (() => {
                             onClick: () => {
                                 this.cacheManager.clear();
                                 setCacheSize(0);
-                                this.showToast("Translation cache cleared.", "success");
+                                this.showToast(t('cacheCleared'), "success");
                             },
                             style: {
                                 padding: "8px 16px", background: "var(--background-modifier-hover)", color: "var(--text-muted)",
@@ -1189,7 +1303,7 @@ module.exports = (() => {
                             },
                             onMouseOver: (e) => { e.currentTarget.style.color = "var(--header-primary)"; e.currentTarget.style.background = "var(--background-modifier-selected)"; e.currentTarget.style.borderColor = "var(--background-modifier-selected)"; },
                             onMouseOut: (e) => { e.currentTarget.style.color = "var(--text-muted)"; e.currentTarget.style.background = "var(--background-modifier-hover)"; e.currentTarget.style.borderColor = "var(--background-modifier-hover)"; }
-                        }, "\uD83D\uDDD1\uFE0F Clear Cache (" + cacheSize + ")")
+                        }, "\uD83D\uDDD1\uFE0F " + t('clearCache') + " (" + cacheSize + ")")
                     )
                 );
             };
@@ -1268,7 +1382,7 @@ module.exports = (() => {
                                 }
                             } catch (e) {
                                 console.error("[AutoTranslate] Outgoing translation failed:", e);
-                                this.uiManager.showToast("Outgoing translation failed. Sent original text.", "error");
+                                this.uiManager.showToast(t('outgoingFailed'), "error");
                             }
                         }
                     }
@@ -1334,7 +1448,7 @@ module.exports = (() => {
             btn.id = 'bd-translate-header-btn';
             btn.style.cssText = 'cursor: pointer; display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; transform: translateY(0);';
             btn.setAttribute('role', 'button');
-            btn.setAttribute('aria-label', 'Translation Menu');
+            btn.setAttribute('aria-label', t('translationMenu'));
 
             const dropdown = document.createElement('div');
             dropdown.className = 'bd-translate-dropdown';
